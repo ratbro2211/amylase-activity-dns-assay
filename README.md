@@ -12,6 +12,43 @@ This repository turns the supplied DNS colorimetric-assay report into a reproduc
 
 These are single reported measurements per condition. The figures show absorbance at 540 nm, not statistically estimated enzyme rates.
 
+## Figure gallery
+
+Each plot uses one source-reported reading per condition. Connecting lines are visual guides; they are not fitted dose-response models.
+
+<table>
+  <tr>
+    <td width="50%">
+      <strong>Figure 1. Maltose calibration curve</strong><br>
+      <a href="figures/figure_01_maltose_standard_curve.png"><img src="figures/figure_01_maltose_standard_curve.png" alt="Maltose calibration curve for the DNS assay" width="100%"></a>
+    </td>
+    <td width="50%">
+      <strong>Figure 2. pH response</strong><br>
+      <a href="figures/figure_02_ph_response.png"><img src="figures/figure_02_ph_response.png" alt="Amylase absorbance response across the tested pH values" width="100%"></a>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%">
+      <strong>Figure 3. Temperature response</strong><br>
+      <a href="figures/figure_03_temperature_response.png"><img src="figures/figure_03_temperature_response.png" alt="Amylase absorbance response across the tested temperatures" width="100%"></a>
+    </td>
+    <td width="50%">
+      <strong>Figure 4. CaCl₂ response</strong><br>
+      <a href="figures/figure_04_calcium_chloride_response.png"><img src="figures/figure_04_calcium_chloride_response.png" alt="Amylase absorbance response across source-labeled calcium chloride concentrations" width="100%"></a>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%">
+      <strong>Figure 5. Starch concentration response</strong><br>
+      <a href="figures/figure_05_starch_response.png"><img src="figures/figure_05_starch_response.png" alt="Amylase absorbance response across the tested starch concentrations" width="100%"></a>
+    </td>
+    <td width="50%">
+      <strong>Figure 6. Ethanol response</strong><br>
+      <a href="figures/figure_06_ethanol_response.png"><img src="figures/figure_06_ethanol_response.png" alt="Amylase absorbance response across source-labeled ethanol concentrations" width="100%"></a>
+    </td>
+  </tr>
+</table>
+
 ## Rebuild the figures, derived table, and PDF report
 
 Requires Python 3.10+ and Matplotlib:
