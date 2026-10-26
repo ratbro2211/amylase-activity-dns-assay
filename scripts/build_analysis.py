@@ -10,6 +10,7 @@ from collections import defaultdict
 from pathlib import Path
 
 import matplotlib
+from matplotlib.patches import FancyBboxPatch
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -83,9 +84,9 @@ def _set_style(ax: plt.Axes) -> None:
     ax.tick_params(colors=MUTED, labelsize=9)
 
 
-def _save_figure(fig: plt.Figure, stem: str) -> None:
+def _save_figure(fig: plt.Figure, stem: str, *, png_dpi: int = 300) -> None:
     FIGURES.mkdir(parents=True, exist_ok=True)
-    fig.savefig(FIGURES / f"{stem}.png", dpi=300, bbox_inches="tight", facecolor="white")
+    fig.savefig(FIGURES / f"{stem}.png", dpi=png_dpi, bbox_inches="tight", facecolor="white")
     fig.savefig(FIGURES / f"{stem}.pdf", bbox_inches="tight", facecolor="white")
     plt.close(fig)
 
@@ -190,6 +191,214 @@ def plot_response(
     _save_figure(fig, stem)
 
 
+def plot_graphical_abstract(
+    assays: list[dict[str, str]], calibration: dict[str, float]
+) -> None:
+    """Create a compact, source-grounded visual summary of all five tests."""
+    specs = [
+        ("pH", "pH", "pH", "peak"),
+        ("temperature", "Temperature", "Temperature (°C)", "peak"),
+        ("calcium_chloride", "CaCl₂", "CaCl₂ (source-labeled mM)", "peak"),
+        ("starch_concentration", "Starch", "Starch (%; source-labeled)", "rise"),
+        ("ethanol", "Ethanol", "Ethanol (%; final level unclear)", "fall"),
+    ]
+    fig = plt.figure(figsize=(15, 9.4), facecolor="#F5F8FA")
+    fig.patches.append(
+        plt.Rectangle(
+            (0, 0.78),
+            1,
+            0.22,
+            transform=fig.transFigure,
+            facecolor=NAVY,
+            edgecolor="none",
+            zorder=-10,
+        )
+    )
+    fig.text(0.055, 0.955, "GRAPHICAL ABSTRACT", fontsize=9, color="#A9D8D2", fontweight="bold")
+    fig.text(
+        0.055,
+        0.895,
+        "Amylase signal across physicochemical conditions",
+        fontsize=22,
+        color="white",
+        fontweight="bold",
+    )
+    fig.text(
+        0.055,
+        0.825,
+        "DNS endpoint A540 · Commercial fungal and salivary amylase",
+        fontsize=10,
+        color="#E7EEF2",
+    )
+
+    calibration_text = (
+        "MALTOSE CALIBRATION REFIT\n"
+        f"A540 = {calibration['slope']:.5f}C "
+        f"{'−' if calibration['intercept'] < 0 else '+'} "
+        f"{abs(calibration['intercept']):.5f}\n"
+        f"R² = {calibration['r_squared']:.5f}"
+    )
+    fig.add_artist(
+        FancyBboxPatch(
+            (0.73, 0.815),
+            0.22,
+            0.14,
+            boxstyle="round,pad=0.012,rounding_size=0.012",
+            transform=fig.transFigure,
+            facecolor="#264966",
+            edgecolor="#486780",
+            linewidth=0.8,
+        )
+    )
+    fig.text(0.745, 0.94, calibration_text, fontsize=8, color="white", va="top", linespacing=1.35)
+
+    legend_y = 0.752
+    for x, color, label in [
+        (0.058, ENZYME_COLORS["Commercial fungal amylase"], "Commercial fungal amylase"),
+        (0.285, ENZYME_COLORS["Salivary amylase"], "Salivary amylase"),
+    ]:
+        fig.add_artist(
+            plt.Line2D(
+                [x, x + 0.025],
+                [legend_y, legend_y],
+                transform=fig.transFigure,
+                color=color,
+                marker="o",
+                linewidth=2,
+                markersize=4,
+            )
+        )
+        fig.text(x + 0.032, legend_y, label, fontsize=8, color=INK, va="center")
+    fig.text(0.945, legend_y, "Shared scale: 0–1.1 A540", fontsize=8, color=MUTED, ha="right", va="center")
+
+    top_positions = [0.055, 0.365, 0.675]
+    bottom_positions = [0.21, 0.52]
+    card_width, card_height = 0.27, 0.295
+    positions = [
+        (top_positions[0], 0.435),
+        (top_positions[1], 0.435),
+        (top_positions[2], 0.435),
+        (bottom_positions[0], 0.115),
+        (bottom_positions[1], 0.115),
+    ]
+
+    for (experiment, title, x_label, trend), (card_x, card_y) in zip(specs, positions):
+        selected = [row for row in assays if row["experiment"] == experiment]
+        grouped: dict[str, list[dict[str, str]]] = defaultdict(list)
+        for row in selected:
+            grouped[row["enzyme"]].append(row)
+        ordered = {
+            enzyme: sorted(rows, key=lambda row: float(row["condition_value"]))
+            for enzyme, rows in grouped.items()
+        }
+
+        fig.add_artist(
+            FancyBboxPatch(
+                (card_x, card_y),
+                card_width,
+                card_height,
+                boxstyle="round,pad=0.008,rounding_size=0.012",
+                transform=fig.transFigure,
+                facecolor="white",
+                edgecolor=GRID,
+                linewidth=0.9,
+                zorder=-1,
+            )
+        )
+        fig.text(
+            card_x + 0.018,
+            card_y + card_height - 0.035,
+            title,
+            fontsize=11,
+            color=NAVY,
+            fontweight="bold",
+            va="center",
+        )
+        fig.text(
+            card_x + card_width - 0.018,
+            card_y + card_height - 0.035,
+            x_label,
+            fontsize=6.7,
+            color=MUTED,
+            ha="right",
+            va="center",
+        )
+
+        ax = fig.add_axes([card_x + 0.045, card_y + 0.075, card_width - 0.07, card_height - 0.135])
+        all_x = sorted({float(row["condition_value"]) for row in selected})
+        for enzyme, rows in ordered.items():
+            x = [float(row["condition_value"]) for row in rows]
+            y = [float(row["absorbance_540nm"]) for row in rows]
+            ax.plot(
+                x,
+                y,
+                color=ENZYME_COLORS[enzyme],
+                marker="o",
+                markersize=3.5,
+                linewidth=1.6,
+                zorder=3,
+            )
+        ax.set_xticks(all_x)
+        ax.set_xticklabels([f"{value:g}" for value in all_x])
+        ax.set_ylim(0, 1.1)
+        ax.set_yticks([0, 0.5, 1.0])
+        ax.set_ylabel("A540", fontsize=6.5, color=MUTED, labelpad=1)
+        ax.tick_params(axis="both", colors=MUTED, labelsize=6.3, length=2, pad=1)
+        ax.spines["top"].set_visible(False)
+        ax.spines["right"].set_visible(False)
+        ax.spines["left"].set_color(GRID)
+        ax.spines["bottom"].set_color(GRID)
+        ax.grid(axis="y", color=GRID, linewidth=0.55)
+        ax.set_axisbelow(True)
+        ax.margins(x=0.04)
+
+        if trend == "peak":
+            peak_rows = [
+                max(ordered[enzyme], key=lambda row: float(row["absorbance_540nm"]))
+                for enzyme in ENZYME_COLORS
+            ]
+            condition = f"{float(peak_rows[0]['condition_value']):g}"
+            summary = (
+                f"Highest at {condition}: fungal {float(peak_rows[0]['absorbance_540nm']):.2f}; "
+                f"salivary {float(peak_rows[1]['absorbance_540nm']):.2f}"
+            )
+        elif trend == "rise":
+            fungal_end = float(ordered["Commercial fungal amylase"][-1]["absorbance_540nm"])
+            saliva_end = float(ordered["Salivary amylase"][-1]["absorbance_540nm"])
+            condition = f"{float(ordered['Commercial fungal amylase'][-1]['condition_value']):g}%"
+            summary = f"Rises to {fungal_end:.2f} / {saliva_end:.2f} at {condition}; no plateau"
+        else:
+            fungal_end = float(ordered["Commercial fungal amylase"][-1]["absorbance_540nm"])
+            saliva_end = float(ordered["Salivary amylase"][-1]["absorbance_540nm"])
+            condition = f"{float(ordered['Commercial fungal amylase'][-1]['condition_value']):g}%"
+            summary = f"Falls to {fungal_end:.2f} / {saliva_end:.2f} by {condition}"
+        fig.text(
+            card_x + 0.018,
+            card_y + 0.027,
+            textwrap.fill(summary, width=49),
+            fontsize=7.2,
+            color=INK,
+            va="center",
+        )
+
+    fig.text(
+        0.055,
+        0.067,
+        "One source-reported reading per condition; no replicates or error bars. Lines are visual guides, not fitted models.",
+        fontsize=8.2,
+        color=INK,
+    )
+    fig.text(
+        0.055,
+        0.038,
+        "CaCl₂ and ethanol final concentrations are unclear. DNS results are endpoint absorbance, not normalized enzyme activity.",
+        fontsize=7.6,
+        color=MUTED,
+    )
+    fig.text(0.945, 0.038, "Source report: calibration pp. 8–9; assay tests pp. 13–32", fontsize=7, color=MUTED, ha="right")
+    _save_figure(fig, "graphical_abstract", png_dpi=180)
+
+
 def write_recalculated_yields(
     assays: list[dict[str, str]], calibration: dict[str, float]
 ) -> Path:
@@ -258,6 +467,16 @@ def _image_page(pdf: PdfPages, number: int, title: str, images: list[tuple[str, 
     plt.close(fig)
 
 
+def _graphical_abstract_page(pdf: PdfPages, number: int) -> None:
+    fig = plt.figure(figsize=(11.69, 8.27), facecolor="white")
+    ax = fig.add_axes([0.025, 0.075, 0.95, 0.87])
+    ax.imshow(plt.imread(FIGURES / "graphical_abstract.png"))
+    ax.axis("off")
+    _footer(fig, number)
+    pdf.savefig(fig, bbox_inches="tight")
+    plt.close(fig)
+
+
 def build_pdf_report(calibration: dict[str, float]) -> Path:
     report_path = REPORTS / "final_report.pdf"
     REPORTS.mkdir(parents=True, exist_ok=True)
@@ -316,15 +535,16 @@ def build_pdf_report(calibration: dict[str, float]) -> Path:
         pdf.savefig(fig, bbox_inches="tight")
         plt.close(fig)
 
+        _graphical_abstract_page(pdf, 2)
         _image_page(
             pdf,
-            2,
+            3,
             "Maltose calibration",
             [("figure_01_maltose_standard_curve.png", [0.09, 0.17, 0.82, 0.68])],
         )
         _image_page(
             pdf,
-            3,
+            4,
             "pH and temperature responses",
             [
                 ("figure_02_ph_response.png", [0.07, 0.52, 0.86, 0.31]),
@@ -333,7 +553,7 @@ def build_pdf_report(calibration: dict[str, float]) -> Path:
         )
         _image_page(
             pdf,
-            4,
+            5,
             "Calcium and substrate responses",
             [
                 ("figure_04_calcium_chloride_response.png", [0.07, 0.52, 0.86, 0.31]),
@@ -342,13 +562,13 @@ def build_pdf_report(calibration: dict[str, float]) -> Path:
         )
         _image_page(
             pdf,
-            5,
+            6,
             "Ethanol response",
             [("figure_06_ethanol_response.png", [0.08, 0.23, 0.84, 0.60])],
         )
         _text_page(
             pdf,
-            6,
+            7,
             "Interpretation and next steps",
             [
                 (
@@ -410,6 +630,7 @@ def build_analysis() -> None:
     ]
     for experiment, title, xlabel, stem in response_specs:
         plot_response(assays, experiment=experiment, title=title, xlabel=xlabel, stem=stem)
+    plot_graphical_abstract(assays, calibration)
     write_recalculated_yields(assays, calibration)
     report_path = build_pdf_report(calibration)
     print(f"Calibration: A540 = {calibration['slope']:.5f} C {calibration['intercept']:+.5f}")

@@ -36,6 +36,8 @@ class EnzymologyDataTests(unittest.TestCase):
 
     def test_output_files_were_generated(self):
         expected = [
+            FIGURES / "graphical_abstract.png",
+            FIGURES / "graphical_abstract.pdf",
             FIGURES / "figure_01_maltose_standard_curve.png",
             FIGURES / "figure_02_ph_response.png",
             FIGURES / "figure_03_temperature_response.png",

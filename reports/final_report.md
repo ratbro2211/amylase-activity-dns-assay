@@ -6,6 +6,12 @@ The supplied project report records a maltose standard curve and endpoint absorb
 
 These are descriptive patterns from one reported reading per condition. No replicates, uncertainty estimates, or raw instrument exports were provided. The figures therefore plot source-reported A540 values without error bars and make no significance claims.
 
+## Graphical abstract
+
+![Graphical abstract showing the measured DNS endpoint patterns across pH, temperature, calcium chloride, starch concentration, and ethanol conditions](../figures/graphical_abstract.png)
+
+The five panels share an A540 scale. Points are the source-reported readings; connecting lines are visual guides only. The abstract does not imply replicates, fitted response models, or normalized enzyme activity.
+
 ## Calibration
 
 The nine standards reported on page 8 span 0–1.6 mg/mL maltose. Refitting those points by ordinary least squares gives `A540 = 0.81833 × C − 0.01578`, with `R² = 0.99070`. This is consistent with the negative-intercept equation shown in the standard-curve graph and in the later calculation, but the source also prints a positive-intercept equation. The discrepancy is documented in `docs/DATA_PROVENANCE_AND_LIMITATIONS.md`.
@@ -48,4 +54,4 @@ The supplied measurements are consistent with higher A540 near pH 7 and 37°C, a
 
 ## Sources and reproducibility
 
-Values were transcribed from `enzymology_1793005839159.pdf`: standards (page 8); pH (pages 13–14); temperature (pages 16–18); CaCl₂ (pages 21–23); starch (pages 26–27); ethanol (pages 31–32). Run `python scripts/build_analysis.py` to regenerate the figures, derived concentration table, and PDF report.
+Values were transcribed from `enzymology_1793005839159.pdf`: standards (page 8); pH (pages 13–14); temperature (pages 16–18); CaCl₂ (pages 21–23); starch (pages 26–27); ethanol (pages 31–32). Run `python scripts/build_analysis.py` to regenerate the graphical abstract, figures, derived concentration table, and PDF report.

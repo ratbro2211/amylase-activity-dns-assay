@@ -1,6 +1,6 @@
 # Amylase activity under physicochemical conditions
 
-This repository turns the supplied DNS colorimetric-assay report into a reproducible, transparent analysis package. It includes the transcribed standard curve and enzyme-assay readings, six generated figures, a report, validation tests, and scripts that regenerate the outputs.
+This repository turns the supplied DNS colorimetric-assay report into a reproducible, transparent analysis package. It includes the transcribed standard curve and enzyme-assay readings, a graphical abstract, six analytical figures, a report, validation tests, and scripts that regenerate the outputs.
 
 ## Main reported patterns
 
@@ -15,6 +15,8 @@ These are single reported measurements per condition. The figures show absorbanc
 ## Figure gallery
 
 Each plot uses one source-reported reading per condition. Connecting lines are visual guides; they are not fitted dose-response models.
+
+![Graphical abstract summarizing the five amylase assay condition tests](figures/graphical_abstract.png)
 
 <table>
   <tr>
@@ -62,6 +64,7 @@ python -m unittest discover -s tests -v
 Outputs:
 
 - `figures/` — standard curve and five condition-response plots in PNG and PDF
+- `figures/graphical_abstract.png` and `.pdf` — one-page visual summary of the five condition tests
 - `results/recalculated_product_yield.csv` — maltose-equivalent estimates calculated from the observed standards and absorbance data
 - `reports/final_report.pdf` and `reports/final_report.md` — final report
 
