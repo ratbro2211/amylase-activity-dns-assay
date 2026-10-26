@@ -1,0 +1,53 @@
+experiment,condition_value,condition_unit,enzyme,absorbance_540nm,source_reported_maltose_mg_ml,source_pages
+pH,3,pH,Commercial fungal amylase,0.08,0.117,13-14
+pH,5,pH,Commercial fungal amylase,0.32,0.410,13-14
+pH,7,pH,Commercial fungal amylase,0.41,0.520,13-14
+pH,9,pH,Commercial fungal amylase,0.31,0.398,13-14
+pH,12,pH,Commercial fungal amylase,0.12,0.166,13-14
+pH,3,pH,Salivary amylase,0.06,0.093,13-14
+pH,5,pH,Salivary amylase,0.15,0.203,13-14
+pH,7,pH,Salivary amylase,0.23,0.300,13-14
+pH,9,pH,Salivary amylase,0.19,0.251,13-14
+pH,12,pH,Salivary amylase,0.10,0.142,13-14
+temperature,37,degC,Commercial fungal amylase,0.45,0.569,16-18
+temperature,50,degC,Commercial fungal amylase,0.33,0.423,16-18
+temperature,60,degC,Commercial fungal amylase,0.27,0.349,16-18
+temperature,70,degC,Commercial fungal amylase,0.11,0.154,16-18
+temperature,80,degC,Commercial fungal amylase,0.04,0.068,16-18
+temperature,37,degC,Salivary amylase,0.38,0.484,16-18
+temperature,50,degC,Salivary amylase,0.31,0.398,16-18
+temperature,60,degC,Salivary amylase,0.16,0.215,16-18
+temperature,70,degC,Salivary amylase,0.07,0.105,16-18
+temperature,80,degC,Salivary amylase,0.02,0.044,16-18
+calcium_chloride,1,mM_nominal,Commercial fungal amylase,0.28,0.361,21-23
+calcium_chloride,2,mM_nominal,Commercial fungal amylase,0.34,0.435,21-23
+calcium_chloride,10,mM_nominal,Commercial fungal amylase,0.52,0.655,21-23
+calcium_chloride,20,mM_nominal,Commercial fungal amylase,0.41,0.520,21-23
+calcium_chloride,50,mM_nominal,Commercial fungal amylase,0.19,0.251,21-23
+calcium_chloride,1,mM_nominal,Salivary amylase,0.22,0.288,21-23
+calcium_chloride,2,mM_nominal,Salivary amylase,0.29,0.374,21-23
+calcium_chloride,10,mM_nominal,Salivary amylase,0.40,0.508,21-23
+calcium_chloride,20,mM_nominal,Salivary amylase,0.31,0.398,21-23
+calcium_chloride,50,mM_nominal,Salivary amylase,0.14,0.190,21-23
+starch_concentration,0.1,percent_nominal,Commercial fungal amylase,0.11,0.154,26-27
+starch_concentration,0.2,percent_nominal,Commercial fungal amylase,0.27,0.349,26-27
+starch_concentration,0.3,percent_nominal,Commercial fungal amylase,0.41,0.520,26-27
+starch_concentration,0.4,percent_nominal,Commercial fungal amylase,0.52,0.655,26-27
+starch_concentration,0.5,percent_nominal,Commercial fungal amylase,0.60,0.753,26-27
+starch_concentration,0.1,percent_nominal,Salivary amylase,0.07,0.105,26-27
+starch_concentration,0.2,percent_nominal,Salivary amylase,0.18,0.239,26-27
+starch_concentration,0.3,percent_nominal,Salivary amylase,0.29,0.374,26-27
+starch_concentration,0.4,percent_nominal,Salivary amylase,0.34,0.435,26-27
+starch_concentration,0.5,percent_nominal,Salivary amylase,0.43,0.545,26-27
+ethanol,0,percent_nominal,Commercial fungal amylase,0.64,0.80,31
+ethanol,0.25,percent_nominal,Commercial fungal amylase,0.33,0.42,31
+ethanol,0.5,percent_nominal,Commercial fungal amylase,0.25,0.31,31
+ethanol,1.0,percent_nominal,Commercial fungal amylase,0.19,0.23,31
+ethanol,1.25,percent_nominal,Commercial fungal amylase,0.16,0.20,31
+ethanol,1.5,percent_nominal,Commercial fungal amylase,0.09,0.11,31
+ethanol,0,percent_nominal,Salivary amylase,1.02,1.27,32
+ethanol,0.25,percent_nominal,Salivary amylase,0.58,0.72,32
+ethanol,0.5,percent_nominal,Salivary amylase,0.46,0.57,32
+ethanol,1.0,percent_nominal,Salivary amylase,0.31,0.39,32
+ethanol,1.25,percent_nominal,Salivary amylase,0.22,0.27,32
+ethanol,1.5,percent_nominal,Salivary amylase,0.14,0.17,32

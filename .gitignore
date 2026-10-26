@@ -1,0 +1,10 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.DS_Store
+
+# Do not commit raw instrument exports or biological samples.
+*.xlsx
+*.xls
+*.csv.tmp
